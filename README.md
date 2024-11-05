@@ -1,1 +1,1 @@
-# Course_DT175G_ArtificialIntelligenceForAgents
+# DT175G - Artificial Intelligence for Agents
