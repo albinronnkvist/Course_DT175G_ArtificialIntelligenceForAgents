@@ -14,8 +14,6 @@ public class GuesserExerciseTests extends GuesserTest {
 	// Only modify this method, if you want to.
 	@Override
 	public TestVerbosity getVerbosity() {
-		return TestVerbosity.BINARY;
-		// return TestVerbosity.HINTS;
-		// return TestVerbosity.FULL;
+		return TestVerbosity.FULL;
 	}
 }
