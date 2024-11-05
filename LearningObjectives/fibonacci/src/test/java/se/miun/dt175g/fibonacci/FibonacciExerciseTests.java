@@ -1,7 +1,4 @@
-package me.albinronnkvist.learningObjectives.exercises;
-
-import me.albinronnkvist.learningObjectives.exercises.fibonacciExercise.Fibonacci;
-import me.albinronnkvist.learningObjectives.exercises.fibonacciExercise.LinearRecursive;
+package se.miun.dt175g.fibonacci;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package me.albinronnkvist.learningObjectives.exercises.fibonacciExercise;
+package se.miun.dt175g.fibonacci;
 
 public interface Fibonacci {
     /*
