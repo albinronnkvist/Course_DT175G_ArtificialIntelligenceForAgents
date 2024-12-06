@@ -31,6 +31,14 @@ public class CSP<T> {
         return variables;
     }
 
+    public Variable getVariable(String name) {
+        return variables.stream()
+            .filter(var -> var.getName()
+                .equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
     public Map<Variable, Domain<T>> getDomains() {
         return domains;
     }
