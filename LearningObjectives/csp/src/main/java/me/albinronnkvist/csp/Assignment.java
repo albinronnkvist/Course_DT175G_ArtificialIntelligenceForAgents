@@ -29,6 +29,10 @@ public class Assignment<T> {
         return variableAssignments.get(var);
     }
 
+    public Map<Variable, T> getVariableAssignments() {
+        return variableAssignments;
+    }
+
     public boolean isComplete(List<Variable> variables) {
         return variableAssignments.keySet().containsAll(variables);
     }

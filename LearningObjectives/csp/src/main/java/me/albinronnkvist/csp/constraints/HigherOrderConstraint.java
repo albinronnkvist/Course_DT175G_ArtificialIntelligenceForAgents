@@ -29,4 +29,9 @@ public class HigherOrderConstraint<T> implements Constraint<T> {
         
         return condition.test(values);
     }
+
+    @Override
+    public List<Variable> getScope() {
+        return variables;
+    }
 }

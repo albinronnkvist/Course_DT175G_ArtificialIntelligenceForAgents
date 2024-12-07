@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import me.albinronnkvist.csp.algorithms.AC3;
+import me.albinronnkvist.csp.algorithms.BacktrackingSearch;
 import me.albinronnkvist.csp.problems.coloringAustralia.ColoringAustraliaCSP;
 
 public class ColoringAustraliaTests {
@@ -25,7 +26,7 @@ public class ColoringAustraliaTests {
         // Assert that no domain is empty
         csp.getVariables().forEach(variable -> {
             assertThat(csp.getDomain(variable).getValues())
-                .isNotEmpty();
+                    .isNotEmpty();
         });
 
         // Assert that the domains are pruned correctly
@@ -64,7 +65,7 @@ public class ColoringAustraliaTests {
         // Assert that no domain is empty
         csp.getVariables().forEach(variable -> {
             assertThat(csp.getDomain(variable).getValues())
-                .isNotEmpty();
+                    .isNotEmpty();
         });
 
         // Assert that the domains are pruned correctly
@@ -79,7 +80,7 @@ public class ColoringAustraliaTests {
         assertThat(csp.getDomain(csp.getVariable("Q")).getValues())
                 .doesNotContain("Green")
                 .doesNotContain("Blue");
-        
+
         assertThat(csp.getDomain(csp.getVariable("NSW")).getValues())
                 .doesNotContain("Red")
                 .doesNotContain("Blue");
@@ -92,5 +93,54 @@ public class ColoringAustraliaTests {
         csp.getVariables().forEach(variable -> {
             System.out.println(variable.getName() + ": " + csp.getDomain(variable).getValues());
         });
+    }
+
+    @Test
+    public void BacktrackingSearch_ShouldSolveColoringAustralia() {
+        var csp = new ColoringAustraliaCSP();
+
+        var solver = new BacktrackingSearch<String>();
+        var solution = solver.solve(csp);
+
+        assertThat(solution.isSolution(csp.getVariables(), csp.getConstraints())).isTrue();
+
+        csp.getVariables().forEach(variable -> {
+            System.out.println(variable.getName() + ": " + solution.getValue(variable));
+        });
+    }
+
+    // TODO: make sure it hits nogoods
+    @Test
+    public void BacktrackingSearch_WithConstraintLearning_ShouldSolveColoringAustralia() {
+        var csp = new ColoringAustraliaCSP();
+
+        var waVariable = csp.getVariable("WA");
+        csp.getDomain(waVariable).getValues().clear();
+        csp.getDomain(waVariable).getValues().add("Red");
+
+        var ntVariable = csp.getVariable("NT");
+        csp.getDomain(ntVariable).getValues().clear();
+        csp.getDomain(ntVariable).getValues().add("Green");
+        csp.getDomain(ntVariable).getValues().add("Blue");
+
+        var qVariable = csp.getVariable("Q");
+        csp.getDomain(qVariable).getValues().clear();
+        csp.getDomain(qVariable).getValues().add("Green");
+        csp.getDomain(qVariable).getValues().add("Blue");
+
+        var solver = new BacktrackingSearch<String>();
+        var solution = solver.solve(csp);
+
+        assertThat(solver.nogoods.size()).isGreaterThan(0);
+
+        if (solution != null) {
+            assertThat(solution.isSolution(csp.getVariables(), csp.getConstraints())).isTrue();
+
+            csp.getVariables().forEach(variable -> {
+                System.out.println(variable.getName() + ": " + solution.getValue(variable));
+            });
+        } else {
+            System.out.println("No solution found.");
+        }
     }
 }

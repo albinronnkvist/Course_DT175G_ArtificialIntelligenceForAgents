@@ -7,7 +7,6 @@ import me.albinronnkvist.csp.Domain;
 import me.albinronnkvist.csp.Variable;
 import me.albinronnkvist.csp.constraints.BinaryConstraint;
 
-// TODO: AC-3 and backtracking to find solution
 public class ColoringAustraliaCSP extends CSP<String> {
     public ColoringAustraliaCSP() {
         super();
