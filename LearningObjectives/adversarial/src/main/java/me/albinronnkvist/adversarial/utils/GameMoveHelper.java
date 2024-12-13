@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.albinronnkvist.adversarial.BoardState;
+import me.albinronnkvist.adversarial.Player;
 import me.albinronnkvist.adversarial.Symbol;
 import me.albinronnkvist.adversarial.exceptions.InvalidMoveException;
 import me.albinronnkvist.adversarial.Action;
@@ -28,7 +29,45 @@ public class GameMoveHelper {
         var clonedState = state.clone();
 
         clonedState.setCell(action, symbol);
-        
+
         return clonedState;
+    }
+
+    public static int evaluate(BoardState state, Player max, Player min) {
+        int score = 0;
+
+        for (int i = 0; i < BoardState.SIZE; i++) {
+            score += evaluateLine(state.getRow(i), max, min);
+        }
+
+        for (int i = 0; i < BoardState.SIZE; i++) {
+            score += evaluateLine(state.getColumn(i), max, min);
+        }
+
+        score += evaluateLine(state.getDiagonalFromTopLeft(), max, min);
+        score += evaluateLine(state.getDiagonalFromTopRight(), max, min);
+
+        System.out.println("Score: " + score);
+
+        return score;
+    }
+
+    private static int evaluateLine(Symbol[] line, Player max, Player min) {
+        int maxCount = 0, minCount = 0;
+
+        for (var cell : line) {
+            if (cell == max.symbol())
+                maxCount++;
+            else if (cell == min.symbol())
+                minCount++;
+        }
+
+        if (maxCount > 0 && minCount == 0) {
+            return (int) Math.pow(10, maxCount); // Favor lines with more max symbols
+        } else if (minCount > 0 && maxCount == 0) {
+            return -(int) Math.pow(10, minCount); // Penalize lines with more min symbols
+        }
+
+        return 0;
     }
 }

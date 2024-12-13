@@ -24,6 +24,18 @@ public class GameTerminalHelper {
     }
 
     /**
+     * Determines if the search should be cut off based on the depth or terminal state.
+     * The search is cut off if the specified depth is zero or if the game is in a terminal state.
+     * 
+     * @param state The current board state.
+     * @param depth The current depth level in the search tree.
+     * @return true if the search should be cut off, false otherwise.
+     */
+    public static boolean isCutoff(BoardState state, int depth) {
+        return depth == 0 || GameTerminalHelper.isTerminal(state);
+    }
+
+    /**
      * Calculates the utility of a game board.
      * The utility is 1 if MAX has won, -1 if MIN has won, and 0 otherwise.
      * @param board The game board.

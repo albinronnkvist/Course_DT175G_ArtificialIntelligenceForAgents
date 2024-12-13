@@ -2,7 +2,7 @@ package me.albinronnkvist.adversarial;
 
 import java.util.Scanner;
 
-import me.albinronnkvist.adversarial.agents.MiniMaxAlphaBetaPruningAgent;
+import me.albinronnkvist.adversarial.agents.MiniMaxHeuristicAlphaBetaPruningAgent;
 import me.albinronnkvist.adversarial.exceptions.InvalidMoveException;
 import me.albinronnkvist.adversarial.mappers.ActionMapper;
 import me.albinronnkvist.adversarial.utils.GameTerminalHelper;
@@ -63,7 +63,8 @@ public class Game {
             // Select your agent here
             // var action = new RandomAgent(boardState).getMove();
             // var action = new MiniMaxAgent(boardState, max, min, currentPlayer).getMove();
-            var action = new MiniMaxAlphaBetaPruningAgent(boardState, max, min, currentPlayer).getMove();
+            // var action = new MiniMaxAlphaBetaPruningAgent(boardState, max, min, currentPlayer).getMove();
+            var action = new MiniMaxHeuristicAlphaBetaPruningAgent(boardState, max, min, currentPlayer, 2).getMove();
 
             boardState.setCell(action, currentPlayer.symbol());
         }

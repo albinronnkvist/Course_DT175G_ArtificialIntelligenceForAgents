@@ -30,6 +30,37 @@ public class BoardState {
         grid[action.row()][action.col()] = symbol;
     }
 
+    public Symbol[] getRow(int row) {
+        BoardStateValidator.validateGetRowOrCol(row);
+        return grid[row];
+    }
+
+    public Symbol[] getColumn(int col) {
+        BoardStateValidator.validateGetRowOrCol(col);
+
+        var column = new Symbol[SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            column[i] = grid[i][col];
+        }
+        return column;
+    }
+
+    public Symbol[] getDiagonalFromTopLeft() {
+        var diagonal = new Symbol[SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            diagonal[i] = grid[i][i];
+        }
+        return diagonal;
+    }
+
+    public Symbol[] getDiagonalFromTopRight() {
+        var diagonal = new Symbol[SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            diagonal[i] = grid[i][SIZE - 1 - i];
+        }
+        return diagonal;
+    }
+
     public void print() {
         int size = grid.length;
         for (int i = 0; i < size; i++) {
