@@ -6,6 +6,7 @@ import me.albinronnkvist.adversarial.Player;
 import me.albinronnkvist.adversarial.exceptions.InvalidMoveException;
 import me.albinronnkvist.adversarial.utils.GameMoveHelper;
 import me.albinronnkvist.adversarial.utils.GameTerminalHelper;
+import me.albinronnkvist.adversarial.utils.TimerHelper;
 import me.albinronnkvist.adversarial.utils.UtilityMoveTuple;
 
 public class MiniMaxHeuristicAlphaBetaPruningAgent implements Agent {
@@ -27,13 +28,35 @@ public class MiniMaxHeuristicAlphaBetaPruningAgent implements Agent {
     @Override
     public Action getMove() throws InvalidMoveException {
         var result = currentPlayer.equals(max) 
-            ? maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, maxDepth) 
-            : minValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, maxDepth);
+            ? maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, maxDepth, null) 
+            : minValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, maxDepth, null);
 
         return result.move();
     }
 
-    private UtilityMoveTuple<Integer, Action> maxValue(BoardState state, int alpha, int beta, int depth) throws InvalidMoveException {
+    public Action getMoveWithIterativeDeepening(long timeLimitMillis) throws InvalidMoveException {
+        Action bestMove = null;
+        var timer = new TimerHelper(timeLimitMillis);
+
+        for (int depth = 1; depth <= maxDepth; depth++) {
+            if(timer.isTimeUp()) {
+                System.out.println("Time up! At depth " + (depth - 1));
+                break;
+            }
+
+            bestMove = currentPlayer.equals(max) 
+                ? maxValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth, timer).move() 
+                : minValue(root, Integer.MIN_VALUE, Integer.MAX_VALUE, depth, timer).move();
+        }
+
+        return bestMove;
+    }
+
+    private UtilityMoveTuple<Integer, Action> maxValue(BoardState state, int alpha, int beta, int depth, TimerHelper timer) throws InvalidMoveException {
+        if (timer != null && timer.isTimeUp()) { // Cutoff immediately if time is up without evaluation of this iteration
+            return new UtilityMoveTuple<>(Integer.MAX_VALUE, null);
+        }
+
         if (GameTerminalHelper.isCutoff(state, depth)) { // Replace terminal test with cutoff test
             return new UtilityMoveTuple<>(GameMoveHelper.evaluate(state, max, min), null); // Replace utility with heuristic evaluation
         }
@@ -43,7 +66,7 @@ public class MiniMaxHeuristicAlphaBetaPruningAgent implements Agent {
 
         for (var action : GameMoveHelper.actions(state)) {
             var resultState = GameMoveHelper.result(state, action, max.symbol());
-            var minResult = minValue(resultState, alpha, beta, depth - 1);
+            var minResult = minValue(resultState, alpha, beta, depth - 1, timer);
 
             if (minResult.utility() > value) {
                 value = minResult.utility();
@@ -59,7 +82,11 @@ public class MiniMaxHeuristicAlphaBetaPruningAgent implements Agent {
         return new UtilityMoveTuple<>(value, bestAction);
     }
 
-    private UtilityMoveTuple<Integer, Action> minValue(BoardState state, int alpha, int beta, int depth) throws InvalidMoveException {
+    private UtilityMoveTuple<Integer, Action> minValue(BoardState state, int alpha, int beta, int depth, TimerHelper timer) throws InvalidMoveException {
+        if (timer != null && timer.isTimeUp()) { // Cutoff immediately if time is up without evaluation of this iteration
+            return new UtilityMoveTuple<>(Integer.MAX_VALUE, null);
+        }
+
         if (GameTerminalHelper.isCutoff(state, depth)) {
             return new UtilityMoveTuple<>(GameMoveHelper.evaluate(state, max, min), null);
         }
@@ -69,7 +96,7 @@ public class MiniMaxHeuristicAlphaBetaPruningAgent implements Agent {
 
         for (var action : GameMoveHelper.actions(state)) {
             var resultState = GameMoveHelper.result(state, action, min.symbol());
-            var maxResult = maxValue(resultState, alpha, beta, depth - 1);
+            var maxResult = maxValue(resultState, alpha, beta, depth - 1, timer);
 
             if (maxResult.utility() < value) {
                 value = maxResult.utility();

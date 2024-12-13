@@ -47,8 +47,6 @@ public class GameMoveHelper {
         score += evaluateLine(state.getDiagonalFromTopLeft(), max, min);
         score += evaluateLine(state.getDiagonalFromTopRight(), max, min);
 
-        System.out.println("Score: " + score);
-
         return score;
     }
 

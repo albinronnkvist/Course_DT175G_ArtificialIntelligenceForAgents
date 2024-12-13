@@ -64,7 +64,8 @@ public class Game {
             // var action = new RandomAgent(boardState).getMove();
             // var action = new MiniMaxAgent(boardState, max, min, currentPlayer).getMove();
             // var action = new MiniMaxAlphaBetaPruningAgent(boardState, max, min, currentPlayer).getMove();
-            var action = new MiniMaxHeuristicAlphaBetaPruningAgent(boardState, max, min, currentPlayer, 2).getMove();
+            // var action = new MiniMaxHeuristicAlphaBetaPruningAgent(boardState, max, min, currentPlayer, 2).getMove();
+            var action = new MiniMaxHeuristicAlphaBetaPruningAgent(boardState, max, min, currentPlayer, 5).getMoveWithIterativeDeepening(45);
 
             boardState.setCell(action, currentPlayer.symbol());
         }
