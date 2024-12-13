@@ -5,11 +5,11 @@ import java.util.Arrays;
 import me.albinronnkvist.adversarial.exceptions.InvalidPlyException;
 import me.albinronnkvist.adversarial.validators.BoardValidator;
 
-public class Board {
+public class BoardState {
     private final Symbol[][] grid;
     public static final int SIZE = 3;
 
-    public Board() {
+    public BoardState() {
         this.grid = new Symbol[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
             Arrays.fill(grid[i], Symbol.EMPTY);
@@ -26,7 +26,7 @@ public class Board {
         grid[action.row()][action.col()] = symbol;
     }
 
-    public void printBoard() {
+    public void print() {
         int size = grid.length;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {

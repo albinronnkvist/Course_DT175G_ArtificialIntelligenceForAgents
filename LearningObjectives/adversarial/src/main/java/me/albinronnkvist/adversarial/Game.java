@@ -2,38 +2,42 @@ package me.albinronnkvist.adversarial;
 
 import java.util.Scanner;
 
+import me.albinronnkvist.adversarial.agents.RandomAgent;
 import me.albinronnkvist.adversarial.exceptions.InvalidPlyException;
 import me.albinronnkvist.adversarial.utils.ActionMapper;
-import me.albinronnkvist.adversarial.utils.GameHelper;
+import me.albinronnkvist.adversarial.utils.GameTerminalHelper;
 
 public class Game {
-    private final Player player1 = new Player("MAX", Symbol.X, PlayerType.HUMAN);
-    private final Player player2 = new Player("MIN", Symbol.O, PlayerType.HUMAN);
-    private final Board board = new Board();
+    private final Player max = new Player("MAX", Symbol.X, PlayerType.HUMAN);
+    private final Player min = new Player("MIN", Symbol.O, PlayerType.AGENT);
+    private final BoardState boardState = new BoardState();
 
     public void play() {
         try(var scanner = new Scanner(System.in)) {
             boolean isTerminal = false;
-            var currentPlayer = player1;
+            var currentPlayer = max;
 
             while (!isTerminal) {
-                board.printBoard();
+                boardState.print();
                 
                 makeMove(scanner, currentPlayer);
 
-                isTerminal = GameHelper.isTerminal(board);
+                isTerminal = GameTerminalHelper.isTerminal(boardState);
                 if (!isTerminal) {
                     currentPlayer = toMove(currentPlayer);
                 }
             }
 
-            var utility = GameHelper.utility(board, player1, player2);
+            var utility = GameTerminalHelper.utility(boardState, max, min);
             System.out.println("\nGame over! Utility: " + utility);
-            board.printBoard();
+            boardState.print();
+        }
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    public void makeMove(Scanner scanner, Player currentPlayer) {
+    public void makeMove(Scanner scanner, Player currentPlayer) throws InvalidPlyException {
         if(currentPlayer.type() == PlayerType.HUMAN) {
             while (true) {
                 try {
@@ -45,7 +49,7 @@ public class Game {
                         throw new IllegalArgumentException("Invalid input. Please enter a number between 0 and 8.");
                     }
     
-                    board.setCell(ActionMapper.convertToAction(move), currentPlayer.symbol());
+                    boardState.setCell(ActionMapper.convertToAction(move), currentPlayer.symbol());
                     break;
                 } catch (InvalidPlyException | IllegalArgumentException e) {
                     System.out.println(e.getMessage() + "\n");
@@ -55,11 +59,13 @@ public class Game {
 
         if(currentPlayer.type() == PlayerType.AGENT) {
             System.out.println("Agent's turn (" + currentPlayer.symbol() + ").");
-            // TODO: 
+            var action = new RandomAgent(boardState).getMove();
+
+            boardState.setCell(action, currentPlayer.symbol());
         }
     }
 
     private Player toMove(Player currentPlayer) {
-        return (currentPlayer == player1) ? player2 : player1;
+        return (currentPlayer == max) ? min : max;
     }
 }
