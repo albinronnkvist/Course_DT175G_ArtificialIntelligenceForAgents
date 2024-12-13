@@ -16,6 +16,10 @@ public class BoardState {
         }
     }
 
+    private BoardState(Symbol[][] grid) {
+        this.grid = grid;
+    }
+
     public Symbol getCell(Action action) {
         BoardStateValidator.validateCell(grid, action);
         return grid[action.row()][action.col()];
@@ -37,5 +41,15 @@ public class BoardState {
             if (i < size - 1) System.out.println("---------");
         }
         System.out.println();
+    }
+
+    @Override
+    public BoardState clone() {
+        var clonedGrid = new Symbol[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            clonedGrid[i] = grid[i].clone();
+        }
+
+        return new BoardState(clonedGrid);
     }
 }
