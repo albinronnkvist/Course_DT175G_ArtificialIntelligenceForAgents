@@ -1,4 +1,4 @@
-package me.albinronnkvist.adversarial.utils;
+package me.albinronnkvist.adversarial.mappers;
 
 import me.albinronnkvist.adversarial.Action;
 import me.albinronnkvist.adversarial.BoardState;

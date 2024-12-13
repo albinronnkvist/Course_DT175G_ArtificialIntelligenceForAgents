@@ -3,8 +3,8 @@ package me.albinronnkvist.adversarial;
 import java.util.Scanner;
 
 import me.albinronnkvist.adversarial.agents.RandomAgent;
-import me.albinronnkvist.adversarial.exceptions.InvalidPlyException;
-import me.albinronnkvist.adversarial.utils.ActionMapper;
+import me.albinronnkvist.adversarial.exceptions.InvalidMoveException;
+import me.albinronnkvist.adversarial.mappers.ActionMapper;
 import me.albinronnkvist.adversarial.utils.GameTerminalHelper;
 
 public class Game {
@@ -37,7 +37,7 @@ public class Game {
         }
     }
 
-    public void makeMove(Scanner scanner, Player currentPlayer) throws InvalidPlyException {
+    public void makeMove(Scanner scanner, Player currentPlayer) throws InvalidMoveException {
         if(currentPlayer.type() == PlayerType.HUMAN) {
             while (true) {
                 try {
@@ -51,7 +51,7 @@ public class Game {
     
                     boardState.setCell(ActionMapper.convertToAction(move), currentPlayer.symbol());
                     break;
-                } catch (InvalidPlyException | IllegalArgumentException e) {
+                } catch (InvalidMoveException | IllegalArgumentException e) {
                     System.out.println(e.getMessage() + "\n");
                 }
             }
@@ -59,7 +59,8 @@ public class Game {
 
         if(currentPlayer.type() == PlayerType.AGENT) {
             System.out.println("Agent's turn (" + currentPlayer.symbol() + ").");
-            var action = new RandomAgent(boardState).getMove();
+
+            var action = new RandomAgent(boardState).getMove(); // Select your agent here
 
             boardState.setCell(action, currentPlayer.symbol());
         }

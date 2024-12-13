@@ -2,8 +2,8 @@ package me.albinronnkvist.adversarial;
 
 import java.util.Arrays;
 
-import me.albinronnkvist.adversarial.exceptions.InvalidPlyException;
-import me.albinronnkvist.adversarial.validators.BoardValidator;
+import me.albinronnkvist.adversarial.exceptions.InvalidMoveException;
+import me.albinronnkvist.adversarial.validators.BoardStateValidator;
 
 public class BoardState {
     private final Symbol[][] grid;
@@ -17,12 +17,12 @@ public class BoardState {
     }
 
     public Symbol getCell(Action action) {
-        BoardValidator.validateCell(grid, action);
+        BoardStateValidator.validateCell(grid, action);
         return grid[action.row()][action.col()];
     }
 
-    public void setCell(Action action, Symbol symbol) throws InvalidPlyException {
-        BoardValidator.validateCellOnSet(grid, action);
+    public void setCell(Action action, Symbol symbol) throws InvalidMoveException {
+        BoardStateValidator.validateCellOnSet(grid, action);
         grid[action.row()][action.col()] = symbol;
     }
 
