@@ -2,7 +2,7 @@
 
 ## Overview
 
-This agent implements a _Monte Carlo Tree Search (MCTS)_ approach for optimal play in the game of __Octi__. When selecting a move, it first checks if any immediately winning action is available. If not, it generates a search tree by repeatedly applying the four MCTS steps: __selection__, __expansion__, __simulation__, and __backpropagation__.
+This agent implements a _Monte Carlo Tree Search (MCTS)_ approach for optimal play in the game of __Octi__ (see rules in _OCTI_RULES.md_). When selecting a move, it first checks if any immediately winning action is available. If not, it generates a search tree by repeatedly applying the four MCTS steps: __selection__, __expansion__, __simulation__, and __backpropagation__.
 - During __selection__, the agent applies the _UCT_ policy, leveraging the _UCB1_ formula to identify the most promising child node for exploration.
 - In __expansion__, if there are any unvisited children, one is selected to generate a new child node.
 - During __simulation__, the agent runs a playout with a mix of random moves and heuristic-guided “best moves” until a terminal state is reached or time runs out. A utility function is then used to return the final score of the playout from the perspective of the agent.
